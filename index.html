@@ -2,74 +2,18 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>パスワード生成【ランダム文字列】</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            color: #333;
-            text-align: center;
-            padding: 20px;
-        }
-        .container {
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: 20px auto;
-        }
-        label, button, input[type="radio"] {
-            font-size: 18px;
-            margin: 5px 0;
-        }
-        table {
-            margin: 0 auto;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left; /* 左詰めに設定 */
-            vertical-align: top;
-        }
-        .result {
-            margin-top: 20px;
-        }
-        .result div {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #f0f0f0;
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-            font-family: monospace;
-        }
-        .copy-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-btn:hover {
-            background-color: #45a049;
-        }
-        input[type="number"] {
-            font-size: 16px;
-            padding: 5px;
-            width: 80px;
-        }
-    </style>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./script.js" defer></script>
 </head>
 <body>
     <h1>ランダム文字列生成</h1>
-    <div class="container">
-        <form id="form">
+
+    <main class="container">
+        <form id="form" autocomplete="off">
             <table>
                 <tr>
                     <td><strong>文字数の選択:</strong></td>
@@ -78,7 +22,17 @@
                         <label><input type="radio" name="length" value="16"> 16文字</label><br>
                         <label><input type="radio" name="length" value="32" checked> 32文字</label><br>
                         <label><input type="radio" name="length" value="custom"> カスタム</label><br>
-                        <input type="number" id="customLength" min="1" style="display: none;" placeholder="カスタム文字数を入力">
+                        <input
+                            type="number"
+                            id="customLength"
+                            min="8"
+                            max="256"
+                            step="1"
+                            inputmode="numeric"
+                            placeholder="8〜256"
+                            aria-describedby="status"
+                            hidden
+                        >
                     </td>
                 </tr>
                 <tr>
@@ -91,91 +45,11 @@
                 </tr>
             </table>
 
-            <button type="button" onclick="generateStrings()">生成</button>
+            <button type="button" id="generateButton">生成</button>
         </form>
 
+        <p id="status" class="status" role="status" aria-live="polite"></p>
         <div class="result" id="result"></div>
-    </div>
-
-    <script>
-        // カスタム文字数を選択時の入力表示制御
-        document.querySelectorAll('input[name="length"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const customLengthInput = document.getElementById('customLength');
-                if (this.value === 'custom') {
-                    customLengthInput.style.display = 'inline-block';
-                } else {
-                    customLengthInput.style.display = 'none';
-                }
-            });
-        });
-
-        // ランダム文字列生成関数
-        function generateStrings() {
-            const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
-            const symbols = '-_/*+.,!#$%&()~|';
-            const numbers = '0123456789';
-
-            let charSet = upperCase + lowerCase;
-            const charType = document.querySelector('input[name="charType"]:checked').value;
-
-            if (charType === 'alphanumeric') {
-                charSet += numbers;
-            } else if (charType === 'alphanumeric-symbols') {
-                charSet += numbers + symbols;
-            }
-
-            let length = document.querySelector('input[name="length"]:checked').value;
-            if (length === 'custom') {
-                length = document.getElementById('customLength').value;
-            }
-
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '';
-
-            for (let i = 0; i < 10; i++) {
-                let randomString = '';
-
-                if (charType === 'alphanumeric-symbols') {
-                    randomString += upperCase[Math.floor(Math.random() * upperCase.length)];
-                    randomString += lowerCase[Math.floor(Math.random() * lowerCase.length)];
-                    randomString += numbers[Math.floor(Math.random() * numbers.length)];
-                    randomString += symbols[Math.floor(Math.random() * symbols.length)];
-                } else if (charType === 'alphanumeric') {
-                    randomString += upperCase[Math.floor(Math.random() * upperCase.length)];
-                    randomString += lowerCase[Math.floor(Math.random() * lowerCase.length)];
-                    randomString += numbers[Math.floor(Math.random() * numbers.length)];
-                } else {
-                    randomString += upperCase[Math.floor(Math.random() * upperCase.length)];
-                    randomString += lowerCase[Math.floor(Math.random() * lowerCase.length)];
-                }
-
-                while (randomString.length < length) {
-                    randomString += charSet[Math.floor(Math.random() * charSet.length)];
-                }
-
-                randomString = randomString.split('').sort(() => 0.5 - Math.random()).join('');
-
-                const div = document.createElement('div');
-                const span = document.createElement('span');
-                span.textContent = randomString;
-                const copyBtn = document.createElement('button');
-                copyBtn.textContent = "コピー";
-                copyBtn.className = "copy-btn";
-                copyBtn.onclick = () => copyToClipboard(randomString);
-                div.appendChild(span);
-                div.appendChild(copyBtn);
-                resultDiv.appendChild(div);
-            }
-        }
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('クリップボードにコピーされました: ' + text);
-            });
-        }
-    </script>
+    </main>
 </body>
 </html>
-

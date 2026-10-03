@@ -1,0 +1,104 @@
+:root {
+    color-scheme: light;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+label,
+button,
+input[type="radio"] {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+    vertical-align: top;
+}
+
+.result {
+    margin-top: 20px;
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    font-family: monospace;
+}
+
+.result-row span {
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.copy-btn,
+#generateButton {
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#generateButton {
+    margin-top: 16px;
+    padding: 8px 18px;
+}
+
+.copy-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    flex: 0 0 auto;
+}
+
+.copy-btn:hover {
+    background-color: #45a049;
+}
+
+input[type="number"] {
+    font-size: 16px;
+    padding: 5px;
+    width: 110px;
+}
+
+.status {
+    min-height: 1.5em;
+    margin: 12px 0 0;
+}
+
+.status.error {
+    color: #b00020;
+}
